@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
 import JobCard from "./JobCard";
 
 const staticJobs = [
@@ -31,29 +31,36 @@ const staticJobs = [
 
 function SectionCard({ filter = {} }) {
   const [jobs, setJobs] = useState(staticJobs);
+  const [filteredJobs, setFilteredJobs] = useState(staticJobs);
 
   useEffect(() => {
     const filterJobs = () => {
-      const filtered = staticJobs.filter((job) => {
+      const filtered = jobs.filter((job) => {
         const matchesProvince = filter.province ? job.province === filter.province : true;
-        const matchesDistrict = filter.district ? job.district === filter.district : true;
+        const matchesDistrict = filter.district ? job.location === filter.district : true;
         const matchesProfession = filter.profession ? job.profession === filter.profession : true;
         return matchesProvince && matchesDistrict && matchesProfession;
       });
-      setJobs(filtered);
+      setFilteredJobs(filtered);
     };
 
     filterJobs();
-  }, [filter]);
+  }, [filter, jobs]);
 
   return (
     <Container className="mt-4">
       <Row>
-        {jobs.map((job) => (
-          <Col key={job.id} md={4}>
-            <JobCard job={job} />
+        {filteredJobs.length > 0 ? (
+          filteredJobs.map((job) => (
+            <Col key={job.id} md={4}>
+              <JobCard job={job} />
+            </Col>
+          ))
+        ) : (
+          <Col>
+            <Alert variant="warning">No jobs found.</Alert>
           </Col>
-        ))}
+        )}
       </Row>
     </Container>
   );

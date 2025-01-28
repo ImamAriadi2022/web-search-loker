@@ -26,6 +26,17 @@ function Filter({ onFilter }) {
     });
   };
 
+  const handleReset = () => {
+    setSelectedProvince("");
+    setSelectedDistrict("");
+    setSelectedProfession("");
+    onFilter({
+      province: "",
+      district: "",
+      profession: "",
+    });
+  };
+
   return (
     <Container className="mt-4">
       <h3>Filter Jobs</h3>
@@ -80,9 +91,18 @@ function Filter({ onFilter }) {
             </Form.Control>
           </Col>
         </Form.Group>
-        <Button variant="primary" onClick={handleFilter}>
-          Apply Filters
-        </Button>
+        <Row>
+          <Col sm={6}>
+            <Button variant="primary" onClick={handleFilter} block>
+              Apply Filters
+            </Button>
+          </Col>
+          <Col sm={6}>
+            <Button variant="secondary" onClick={handleReset} block>
+              Reset Filters
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </Container>
   );
