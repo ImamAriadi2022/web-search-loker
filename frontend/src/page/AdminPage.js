@@ -32,7 +32,7 @@ function AdminPage() {
       setFilteredApplicants((prev) =>
         prev.filter((applicant) => applicant.id !== id)
       );
-      alert("Application approved!");
+      alert("Lamaran disetujui!");
     } catch (error) {
       console.error("Error approving application:", error);
     }
@@ -47,7 +47,7 @@ function AdminPage() {
       setFilteredApplicants((prev) =>
         prev.filter((applicant) => applicant.id !== id)
       );
-      alert("Application rejected!");
+      alert("Lamaran ditolak!");
     } catch (error) {
       console.error("Error rejecting application:", error);
     }
@@ -81,10 +81,10 @@ function AdminPage() {
 
   return (
     <Container className="mt-4">
-      <h1 className="text-center mb-4">Admin Panel</h1>
+      <h1 className="text-center mb-4">Panel Admin</h1>
 
       {/* Total Applicants */}
-      <h2 className="mb-4">Total Applicants: {filteredApplicants.length}</h2>
+      <h2 className="mb-4">Total Pelamar: {filteredApplicants.length}</h2>
 
       {/* Search and Filter Section */}
       <Form className="mb-4">
@@ -92,7 +92,7 @@ function AdminPage() {
           <Col md={6}>
             <Form.Control
               type="text"
-              placeholder="Search by name..."
+              placeholder="Cari berdasarkan nama..."
               value={searchQuery}
               onChange={handleSearch}
             />
@@ -103,7 +103,7 @@ function AdminPage() {
               value={filterProfession}
               onChange={handleFilterProfession}
             >
-              <option value="">All Professions</option>
+              <option value="">Semua Profesi</option>
               <option value="Software Engineer">Software Engineer</option>
               <option value="Graphic Designer">Graphic Designer</option>
               <option value="Data Scientist">Data Scientist</option>
@@ -118,11 +118,11 @@ function AdminPage() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Profession</th>
-              <th>Portfolio</th>
-              <th>Social Media</th>
-              <th>Actions</th>
+              <th>Nama</th>
+              <th>Profesi</th>
+              <th>Portofolio</th>
+              <th>Media Sosial</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -136,7 +136,7 @@ function AdminPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    View Portfolio
+                    Lihat Portofolio
                   </a>
                 </td>
                 <td>
@@ -145,7 +145,7 @@ function AdminPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    View Profile
+                    Lihat Profil
                   </a>
                 </td>
                 <td>
@@ -155,14 +155,14 @@ function AdminPage() {
                     onClick={() => handleApprove(applicant.id)}
                     className="mr-2"
                   >
-                    Approve
+                    Setujui
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
                     onClick={() => handleReject(applicant.id)}
                   >
-                    Reject
+                    Tolak
                   </Button>
                 </td>
               </tr>
@@ -170,7 +170,7 @@ function AdminPage() {
           </tbody>
         </Table>
       ) : (
-        <p>No applicants found.</p>
+        <p>Tidak ada pelamar ditemukan.</p>
       )}
     </Container>
   );

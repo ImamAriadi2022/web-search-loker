@@ -6,76 +6,96 @@ function JobRegisterPage() {
   const [location, setLocation] = useState("");
   const [province, setProvince] = useState("");
   const [description, setDescription] = useState("");
+  const [portfolio, setPortfolio] = useState("");
+  const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("location", location);
+    formData.append("province", province);
+    formData.append("description", description);
+    formData.append("portfolio", portfolio);
+    if (image) {
+      formData.append("image", image);
+    }
+
     try {
       const response = await fetch("/api/jobs", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          location,
-          province,
-          description,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
-        alert("Job registered successfully!");
+        alert("Pekerjaan berhasil didaftarkan!");
       } else {
-        console.error("Error registering job:", response.statusText);
+        console.error("Error mendaftarkan pekerjaan:", response.statusText);
       }
     } catch (error) {
-      console.error("Error registering job:", error);
+      console.error("Error mendaftarkan pekerjaan:", error);
     }
   };
 
   return (
     <Container className="mt-4">
-      <h1 className="text-center mb-4">Register Job</h1>
+      <h1 className="text-center mb-4">Daftarkan Pekerjaan</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formJobTitle">
-          <Form.Label>Job Title</Form.Label>
+          <Form.Label>Judul Pekerjaan</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter job title"
+            placeholder="Masukkan judul pekerjaan"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="formLocation">
-          <Form.Label>Location</Form.Label>
+          <Form.Label>Lokasi</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter job location"
+            placeholder="Masukkan lokasi pekerjaan"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="formProvince">
-          <Form.Label>Province</Form.Label>
+          <Form.Label>Provinsi</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter province"
+            placeholder="Masukkan provinsi"
             value={province}
             onChange={(e) => setProvince(e.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="formDescription">
-          <Form.Label>Description</Form.Label>
+          <Form.Label>Deskripsi</Form.Label>
           <Form.Control
             as="textarea"
             rows={3}
-            placeholder="Enter job description"
+            placeholder="Masukkan deskripsi pekerjaan"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </Form.Group>
+        <Form.Group controlId="formPortfolio">
+          <Form.Label>Link Portofolio</Form.Label>
+          <Form.Control
+            type="url"
+            placeholder="Masukkan link portofolio"
+            value={portfolio}
+            onChange={(e) => setPortfolio(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formImage">
+          <Form.Label>Unggah Foto</Form.Label>
+          <Form.Control
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+        </Form.Group>
         <Button variant="primary" type="submit">
-          Submit
+          Daftar
         </Button>
       </Form>
     </Container>

@@ -17,9 +17,9 @@ function JobCard({ job }) {
             {job.location}, {job.province}
           </Card.Subtitle>
           <Card.Text>{job.description}</Card.Text>
-          <Card.Text className="text-muted">Profession: {job.profession}</Card.Text>
+          <Card.Text className="text-muted">Profesi: {job.profession}</Card.Text>
           <Button variant="primary" onClick={handleShow}>
-            View Details
+            Lihat Detail
           </Button>
         </Card.Body>
       </Card>
@@ -30,13 +30,13 @@ function JobCard({ job }) {
         </Modal.Header>
         <Modal.Body>
           <img src={job.image} alt={job.title} className="img-fluid mb-3" />
-          <h5>Location: {job.location}, {job.province}</h5>
+          <h5>Lokasi: {job.location}, {job.province}</h5>
           <p>{job.description}</p>
-          <p className="text-muted">Profession: {job.profession}</p>
+          <p className="text-muted">Profesi: {job.profession}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Tutup
           </Button>
         </Modal.Footer>
       </Modal>

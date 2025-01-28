@@ -8,23 +8,23 @@ const staticJobs = [
     title: "Software Engineer",
     location: "Jakarta",
     province: "DKI Jakarta",
-    description: "Develop and maintain web applications.",
+    description: "Mengembangkan dan memelihara aplikasi web.",
     profession: "Programmer",
   },
   {
     id: 2,
     title: "Graphic Designer",
     location: "Bandung",
-    province: "West Java",
-    description: "Create visual concepts to communicate ideas.",
+    province: "Jawa Barat",
+    description: "Membuat konsep visual untuk mengkomunikasikan ide.",
     profession: "Digital Marketer",
   },
   {
     id: 3,
     title: "Content Creator",
     location: "Surabaya",
-    province: "East Java",
-    description: "Produce engaging content for various platforms.",
+    province: "Jawa Timur",
+    description: "Menghasilkan konten yang menarik untuk berbagai platform.",
     profession: "Konten Kreator",
   },
 ];
@@ -58,7 +58,7 @@ function SectionCard({ filter = {} }) {
           ))
         ) : (
           <Col>
-            <Alert variant="warning">No jobs found.</Alert>
+            <Alert variant="warning">Pekerjaan tidak ditemukan.</Alert>
           </Col>
         )}
       </Row>
