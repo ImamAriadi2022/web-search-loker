@@ -2,36 +2,24 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import JobCard from "./JobCard";
 
-const staticJobs = [
-  {
-    id: 1,
-    title: "Software Engineer",
-    location: "Jakarta",
-    province: "DKI Jakarta",
-    description: "Mengembangkan dan memelihara aplikasi web.",
-    profession: "Programmer",
-  },
-  {
-    id: 2,
-    title: "Graphic Designer",
-    location: "Bandung",
-    province: "Jawa Barat",
-    description: "Membuat konsep visual untuk mengkomunikasikan ide.",
-    profession: "Digital Marketer",
-  },
-  {
-    id: 3,
-    title: "Content Creator",
-    location: "Surabaya",
-    province: "Jawa Timur",
-    description: "Menghasilkan konten yang menarik untuk berbagai platform.",
-    profession: "Konten Kreator",
-  },
-];
-
 function SectionCard({ filter = {} }) {
-  const [jobs, setJobs] = useState(staticJobs);
-  const [filteredJobs, setFilteredJobs] = useState(staticJobs);
+  const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/jobs");
+        const data = await response.json();
+        setJobs(data);
+        setFilteredJobs(data);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   useEffect(() => {
     const filterJobs = () => {

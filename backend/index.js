@@ -1,34 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
-const { createJobTable } = require('./models/Job');
-const { createUserTable } = require('./models/User');
-const { createApplicantTable } = require('./models/Applicant');
-
-const jobRoutes = require('./routes/jobRoutes');
-const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/authRoutes');
-const applicantRoutes = require('./routes/applicantRoutes');
+const bodyParser = require('body-parser');
 
 const app = express();
+const port = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Routes
-app.use('/api/jobs', jobRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/applicants', applicantRoutes);
+const jobsRouter = require('./routes/jobs');
+const applicantsRouter = require('./routes/applicants');
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
-  const connection = await connectDB();
-  await createJobTable();
-  await createUserTable();
-  await createApplicantTable();
-});
+app.use('/api/jobs', jobsRouter);
+app.use('/api/applicants', applicantsRouter);
+
+app.listen(port, () => console.log(`Server running on port ${port}`));

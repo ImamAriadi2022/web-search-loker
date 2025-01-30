@@ -2,89 +2,95 @@ import React, { useState, useEffect } from "react";
 import { Container, Table, Form, Button, Row, Col } from "react-bootstrap";
 
 function AdminPage() {
-  const [applicants, setApplicants] = useState([]);
-  const [filteredApplicants, setFilteredApplicants] = useState([]);
+  const [jobs, setJobs] = useState([
+    {
+      id: 1,
+      title: "Software Engineer",
+      location: "Jakarta",
+      province: "DKI Jakarta",
+      description: "Mengembangkan dan memelihara aplikasi web.",
+      portfolio: "https://example.com/portfolio1",
+      profession: "Programmer"
+    },
+    {
+      id: 2,
+      title: "Graphic Designer",
+      location: "Bandung",
+      province: "Jawa Barat",
+      description: "Membuat konsep visual untuk mengkomunikasikan ide.",
+      portfolio: "https://example.com/portfolio2",
+      profession: "Digital Marketer"
+    },
+    {
+      id: 3,
+      title: "Content Creator",
+      location: "Surabaya",
+      province: "Jawa Timur",
+      description: "Menghasilkan konten yang menarik untuk berbagai platform.",
+      portfolio: "https://example.com/portfolio3",
+      profession: "Konten Kreator"
+    }
+  ]);
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProfession, setFilterProfession] = useState("");
 
-  // Fetch applicants when the component mounts
-  useEffect(() => {
-    const fetchApplicants = async () => {
-      try {
-        const response = await fetch("/api/applicants"); // API endpoint
-        const data = await response.json();
-        setApplicants(data);
-        setFilteredApplicants(data);
-      } catch (error) {
-        console.error("Error fetching applicants:", error);
-      }
-    };
-
-    fetchApplicants();
-  }, []);
-
   // Handle approve action
-  const handleApprove = async (id) => {
-    try {
-      await fetch(`/api/applicants/${id}/approve`, {
-        method: "POST",
-      });
-      setFilteredApplicants((prev) =>
-        prev.filter((applicant) => applicant.id !== id)
-      );
-      alert("Lamaran disetujui!");
-    } catch (error) {
-      console.error("Error approving application:", error);
-    }
+  const handleApprove = (id) => {
+    setFilteredJobs((prev) =>
+      prev.filter((job) => job.id !== id)
+    );
+    alert("Pekerjaan disetujui!");
   };
 
   // Handle reject action
-  const handleReject = async (id) => {
-    try {
-      await fetch(`/api/applicants/${id}/reject`, {
-        method: "POST",
-      });
-      setFilteredApplicants((prev) =>
-        prev.filter((applicant) => applicant.id !== id)
-      );
-      alert("Lamaran ditolak!");
-    } catch (error) {
-      console.error("Error rejecting application:", error);
-    }
+  const handleReject = (id) => {
+    setFilteredJobs((prev) =>
+      prev.filter((job) => job.id !== id)
+    );
+    alert("Pekerjaan ditolak!");
+  };
+
+  // Handle delete action
+  const handleDelete = (id) => {
+    setFilteredJobs((prev) =>
+      prev.filter((job) => job.id !== id)
+    );
+    alert("Pekerjaan dihapus!");
   };
 
   // Handle search query
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    filterApplicants(e.target.value, filterProfession);
+    filterJobs(e.target.value, filterProfession);
   };
 
   // Handle profession filter
   const handleFilterProfession = (e) => {
     setFilterProfession(e.target.value);
-    filterApplicants(searchQuery, e.target.value);
+    filterJobs(searchQuery, e.target.value);
   };
 
-  // Filter applicants based on search and profession
-  const filterApplicants = (search, profession) => {
-    const filtered = applicants.filter((applicant) => {
-      const matchesSearch = applicant.fullName
+  // Filter jobs based on search and profession
+  const filterJobs = (search, profession) => {
+    const filtered = jobs.filter((job) => {
+      const matchesSearch = job.title
         .toLowerCase()
         .includes(search.toLowerCase());
       const matchesProfession = profession
-        ? applicant.profession === profession
+        ? job.profession === profession
         : true;
       return matchesSearch && matchesProfession;
     });
-    setFilteredApplicants(filtered);
+    setFilteredJobs(filtered);
   };
 
   return (
     <Container className="mt-4">
       <h1 className="text-center mb-4">Panel Admin</h1>
 
-      {/* Total Applicants */}
-      <h2 className="mb-4">Total Pelamar: {filteredApplicants.length}</h2>
+      {/* Total Jobs */}
+      <h2 className="mb-4">Total Pekerjaan: {filteredJobs.length}</h2>
 
       {/* Search and Filter Section */}
       <Form className="mb-4">
@@ -92,7 +98,7 @@ function AdminPage() {
           <Col md={6}>
             <Form.Control
               type="text"
-              placeholder="Cari berdasarkan nama..."
+              placeholder="Cari berdasarkan judul..."
               value={searchQuery}
               onChange={handleSearch}
             />
@@ -104,35 +110,37 @@ function AdminPage() {
               onChange={handleFilterProfession}
             >
               <option value="">Semua Profesi</option>
-              <option value="Software Engineer">Software Engineer</option>
-              <option value="Graphic Designer">Graphic Designer</option>
-              <option value="Data Scientist">Data Scientist</option>
-              <option value="Content Writer">Content Writer</option>
+              <option value="Programmer">Programmer</option>
+              <option value="Digital Marketer">Digital Marketer</option>
+              <option value="Konten Kreator">Konten Kreator</option>
             </Form.Control>
           </Col>
         </Row>
       </Form>
 
-      {/* Applicants Table */}
-      {filteredApplicants.length > 0 ? (
+      {/* Jobs Table */}
+      {filteredJobs.length > 0 ? (
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Nama</th>
-              <th>Profesi</th>
+              <th>Judul</th>
+              <th>Lokasi</th>
+              <th>Provinsi</th>
+              <th>Deskripsi</th>
               <th>Portofolio</th>
-              <th>Media Sosial</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {filteredApplicants.map((applicant) => (
-              <tr key={applicant.id}>
-                <td>{applicant.fullName}</td>
-                <td>{applicant.profession}</td>
+            {filteredJobs.map((job) => (
+              <tr key={job.id}>
+                <td>{job.title}</td>
+                <td>{job.location}</td>
+                <td>{job.province}</td>
+                <td>{job.description}</td>
                 <td>
                   <a
-                    href={applicant.portfolio}
+                    href={job.portfolio}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -140,19 +148,10 @@ function AdminPage() {
                   </a>
                 </td>
                 <td>
-                  <a
-                    href={applicant.socialMedia}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Lihat Profil
-                  </a>
-                </td>
-                <td>
                   <Button
                     variant="success"
                     size="sm"
-                    onClick={() => handleApprove(applicant.id)}
+                    onClick={() => handleApprove(job.id)}
                     className="mr-2"
                   >
                     Setujui
@@ -160,9 +159,17 @@ function AdminPage() {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleReject(applicant.id)}
+                    onClick={() => handleReject(job.id)}
+                    className="mr-2"
                   >
                     Tolak
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleDelete(job.id)}
+                  >
+                    Hapus
                   </Button>
                 </td>
               </tr>
@@ -170,7 +177,7 @@ function AdminPage() {
           </tbody>
         </Table>
       ) : (
-        <p>Tidak ada pelamar ditemukan.</p>
+        <p>Tidak ada pekerjaan ditemukan.</p>
       )}
     </Container>
   );
