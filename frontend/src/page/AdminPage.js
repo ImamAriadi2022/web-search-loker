@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Table, Form, Button, Row, Col } from "react-bootstrap";
+import CostumNavbar from "../components/Navbar";
 
 function AdminPage() {
   const [jobs, setJobs] = useState([
@@ -86,6 +87,8 @@ function AdminPage() {
   };
 
   return (
+    <>
+    <CostumNavbar />
     <Container className="mt-4">
       <h1 className="text-center mb-4">Panel Admin</h1>
 
@@ -180,6 +183,7 @@ function AdminPage() {
         <p>Tidak ada pekerjaan ditemukan.</p>
       )}
     </Container>
+    </>
   );
 }
 

@@ -1,94 +1,68 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Alert } from "react-bootstrap";
-import JobCard from "./JobCard";
+import React, { useState } from "react";
+import { Card, Button, Modal, Image, Carousel } from "react-bootstrap";
 
-const staticJobs = [
-  {
-    id: 1,
-    province: "DKI Jakarta",
-    location: "Jakarta",
-    profession: "Programmer",
-    city: "Jakarta",
-    salary: 10000000,
-    education: "S1",
-    address: "Jl. Sudirman",
-    age: 25,
-    portfolio: "https://example.com/portfolio1.jpg",
-  },
-  {
-    id: 2,
-    province: "Jawa Barat",
-    location: "Bandung",
-    profession: "Digital Marketer",
-    city: "Bandung",
-    salary: 8000000,
-    education: "S1",
-    address: "Jl. Asia Afrika",
-    age: 28,
-    portfolio: "https://example.com/portfolio2.jpg",
-  },
-  {
-    id: 3,
-    province: "Jawa Timur",
-    location: "Surabaya",
-    profession: "Konten Kreator",
-    city: "Surabaya",
-    salary: 7000000,
-    education: "SMA",
-    address: "Jl. Tunjungan",
-    age: 22,
-    portfolio: "https://example.com/portfolio3.jpg",
-  },
-];
+function JobCard({ job, onSelectJob }) {
+  const [show, setShow] = useState(false);
 
-function SectionCard({ filter = {} }) {
-  const [filteredJobs, setFilteredJobs] = useState(staticJobs);
-
-  useEffect(() => {
-    const filterJobs = () => {
-      const filtered = staticJobs.filter((job) => {
-        const matchesProvince = filter.province ? job.province === filter.province : true;
-        const matchesDistrict = filter.district ? job.location === filter.district : true;
-        const matchesProfession = filter.profession ? job.profession === filter.profession : true;
-        const matchesCity = filter.city ? job.city === filter.city : true;
-        const matchesSalary = filter.salary ? job.salary === parseInt(filter.salary) : true;
-        const matchesEducation = filter.education ? job.education === filter.education : true;
-        const matchesAddress = filter.address ? job.address.includes(filter.address) : true;
-        const matchesAge = filter.age ? job.age === parseInt(filter.age) : true;
-        return (
-          matchesProvince &&
-          matchesDistrict &&
-          matchesProfession &&
-          matchesCity &&
-          matchesSalary &&
-          matchesEducation &&
-          matchesAddress &&
-          matchesAge
-        );
-      });
-      setFilteredJobs(filtered);
-    };
-
-    filterJobs();
-  }, [filter]);
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    onSelectJob(job);
+    setShow(true);
+  };
 
   return (
-    <Container className="mt-4">
-      <Row>
-        {filteredJobs.length > 0 ? (
-          filteredJobs.map((job) => (
-            <Col key={job.id} md={4}>
-              <JobCard job={job} />
-            </Col>
-          ))
-        ) : (
-          <Col>
-            <Alert variant="warning">Pekerjaan tidak ditemukan.</Alert>
-          </Col>
+    <>
+      <Card className="mb-3">
+        {job.profileImage && (
+          <Card.Img variant="top" src={job.profileImage} alt="Profile Image" />
         )}
-      </Row>
-    </Container>
+        <Card.Body>
+          <Card.Title>{job.profession}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">
+            {job.city}, {job.province}
+          </Card.Subtitle>
+          <Card.Text>Gaji: Rp {job.salary.toLocaleString()}</Card.Text>
+          <Card.Text>Pendidikan: {job.education}</Card.Text>
+          <Card.Text>Alamat: {job.address}</Card.Text>
+          <Card.Text>Usia: {job.age} tahun</Card.Text>
+          <Button variant="primary" onClick={handleShow}>
+            Lihat Detail
+          </Button>
+        </Card.Body>
+      </Card>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{job.profession}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Image src={job.profileImage} alt="Profile Image" fluid className="mb-3" />
+          <h5>Lokasi: {job.city}, {job.province}</h5>
+          <p>Gaji: Rp {job.salary.toLocaleString()}</p>
+          <p>Pendidikan: {job.education}</p>
+          <p>Alamat: {job.address}</p>
+          <p>Usia: {job.age} tahun</p>
+          {job.portfolio && job.portfolio.length > 0 && (
+            <div>
+              <h5>Portofolio:</h5>
+              <Carousel>
+                {job.portfolio.map((image, index) => (
+                  <Carousel.Item key={index}>
+                    <Image src={process.env.PUBLIC_URL + image} alt={`Portfolio ${index + 1}`} fluid />
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Tutup
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 
-export default SectionCard;
+export default JobCard;

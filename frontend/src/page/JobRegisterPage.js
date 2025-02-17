@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import axios from "axios";
+import CostumNavbar from "../components/Navbar";
+
 
 function JobRegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [profession, setProfession] = useState("");
+  const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [description, setDescription] = useState("");
   const [portfolio, setPortfolio] = useState("");
+  const [salary, setSalary] = useState("");
+  const [education, setEducation] = useState("");
+  const [address, setAddress] = useState("");
+  const [age, setAge] = useState("");
   const [image, setImage] = useState(null);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
@@ -30,7 +36,7 @@ function JobRegisterPage() {
   const handleProvinceChange = (e) => {
     const provinceId = e.target.value;
     setProvince(provinceId);
-    setLocation("");
+    setCity("");
 
     // Fetch cities based on selected province
     axios.get(`https://alamat.thecloudalert.com/api/kabkota/get/?d_provinsi_id=${provinceId}`)
@@ -49,11 +55,15 @@ function JobRegisterPage() {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("phone", phone);
-    formData.append("title", title);
-    formData.append("location", location);
+    formData.append("profession", profession);
+    formData.append("city", city);
     formData.append("province", province);
     formData.append("description", description);
     formData.append("portfolio", portfolio);
+    formData.append("salary", salary);
+    formData.append("education", education);
+    formData.append("address", address);
+    formData.append("age", age);
     if (image) {
       formData.append("image", image);
     }
@@ -75,6 +85,8 @@ function JobRegisterPage() {
   };
 
   return (
+    <>
+    <CostumNavbar />
     <Container className="mt-4">
       <h1 className="text-center mb-4">Daftarkan Pekerjaan</h1>
       <Form onSubmit={handleSubmit}>
@@ -105,12 +117,12 @@ function JobRegisterPage() {
             onChange={(e) => setPhone(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId="formJobTitle">
+        <Form.Group controlId="formProfession">
           <Form.Label>Profesi</Form.Label>
           <Form.Control
             as="select"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={profession}
+            onChange={(e) => setProfession(e.target.value)}
           >
             <option value="">Pilih Profesi</option>
             <option value="Programmer">Programmer</option>
@@ -133,12 +145,12 @@ function JobRegisterPage() {
             ))}
           </Form.Control>
         </Form.Group>
-        <Form.Group controlId="formLocation">
+        <Form.Group controlId="formCity">
           <Form.Label>Kota/Kabupaten</Form.Label>
           <Form.Control
             as="select"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
             disabled={!province}
           >
             <option value="">Pilih Kota/Kabupaten</option>
@@ -148,6 +160,42 @@ function JobRegisterPage() {
               </option>
             ))}
           </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="formSalary">
+          <Form.Label>Gaji</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Masukkan gaji"
+            value={salary}
+            onChange={(e) => setSalary(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formEducation">
+          <Form.Label>Pendidikan</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Masukkan pendidikan"
+            value={education}
+            onChange={(e) => setEducation(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formAddress">
+          <Form.Label>Alamat</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Masukkan alamat"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formAge">
+          <Form.Label>Usia</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Masukkan usia"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
         </Form.Group>
         <Form.Group controlId="formDescription">
           <Form.Label>Deskripsi</Form.Label>
@@ -180,6 +228,7 @@ function JobRegisterPage() {
         </Button>
       </Form>
     </Container>
+    </>
   );
 }
 
