@@ -17,12 +17,22 @@ function Filter({ onFilter }) {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedProfession, setSelectedProfession] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedSalary, setSelectedSalary] = useState("");
+  const [selectedEducation, setSelectedEducation] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [selectedAge, setSelectedAge] = useState("");
 
   const handleFilter = () => {
     onFilter({
       province: selectedProvince,
       district: selectedDistrict,
       profession: selectedProfession,
+      city: selectedCity,
+      salary: selectedSalary,
+      education: selectedEducation,
+      address: selectedAddress,
+      age: selectedAge,
     });
   };
 
@@ -30,10 +40,20 @@ function Filter({ onFilter }) {
     setSelectedProvince("");
     setSelectedDistrict("");
     setSelectedProfession("");
+    setSelectedCity("");
+    setSelectedSalary("");
+    setSelectedEducation("");
+    setSelectedAddress("");
+    setSelectedAge("");
     onFilter({
       province: "",
       district: "",
       profession: "",
+      city: "",
+      salary: "",
+      education: "",
+      address: "",
+      age: "",
     });
   };
 
@@ -74,6 +94,56 @@ function Filter({ onFilter }) {
                 </option>
               ))}
             </Form.Control>
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formCity">
+          <Form.Label column sm={2}>Kota Anda:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formSalary">
+          <Form.Label column sm={2}>Gaji Bulanan:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="number"
+              value={selectedSalary}
+              onChange={(e) => setSelectedSalary(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formEducation">
+          <Form.Label column sm={2}>Pendidikan Terakhir:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={selectedEducation}
+              onChange={(e) => setSelectedEducation(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formAddress">
+          <Form.Label column sm={2}>Alamat:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={selectedAddress}
+              onChange={(e) => setSelectedAddress(e.target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="formAge">
+          <Form.Label column sm={2}>Usia:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="number"
+              value={selectedAge}
+              onChange={(e) => setSelectedAge(e.target.value)}
+            />
           </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="formProfession">

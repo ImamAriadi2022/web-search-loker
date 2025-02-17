@@ -1,47 +1,94 @@
-import React, { useState } from "react";
-import { Card, Button, Modal } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Alert } from "react-bootstrap";
+import JobCard from "./JobCard";
 
-function JobCard({ job }) {
-  const [show, setShow] = useState(false);
+const staticJobs = [
+  {
+    id: 1,
+    province: "DKI Jakarta",
+    location: "Jakarta",
+    profession: "Programmer",
+    city: "Jakarta",
+    salary: 10000000,
+    education: "S1",
+    address: "Jl. Sudirman",
+    age: 25,
+    portfolio: "https://example.com/portfolio1.jpg",
+  },
+  {
+    id: 2,
+    province: "Jawa Barat",
+    location: "Bandung",
+    profession: "Digital Marketer",
+    city: "Bandung",
+    salary: 8000000,
+    education: "S1",
+    address: "Jl. Asia Afrika",
+    age: 28,
+    portfolio: "https://example.com/portfolio2.jpg",
+  },
+  {
+    id: 3,
+    province: "Jawa Timur",
+    location: "Surabaya",
+    profession: "Konten Kreator",
+    city: "Surabaya",
+    salary: 7000000,
+    education: "SMA",
+    address: "Jl. Tunjungan",
+    age: 22,
+    portfolio: "https://example.com/portfolio3.jpg",
+  },
+];
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+function SectionCard({ filter = {} }) {
+  const [filteredJobs, setFilteredJobs] = useState(staticJobs);
+
+  useEffect(() => {
+    const filterJobs = () => {
+      const filtered = staticJobs.filter((job) => {
+        const matchesProvince = filter.province ? job.province === filter.province : true;
+        const matchesDistrict = filter.district ? job.location === filter.district : true;
+        const matchesProfession = filter.profession ? job.profession === filter.profession : true;
+        const matchesCity = filter.city ? job.city === filter.city : true;
+        const matchesSalary = filter.salary ? job.salary === parseInt(filter.salary) : true;
+        const matchesEducation = filter.education ? job.education === filter.education : true;
+        const matchesAddress = filter.address ? job.address.includes(filter.address) : true;
+        const matchesAge = filter.age ? job.age === parseInt(filter.age) : true;
+        return (
+          matchesProvince &&
+          matchesDistrict &&
+          matchesProfession &&
+          matchesCity &&
+          matchesSalary &&
+          matchesEducation &&
+          matchesAddress &&
+          matchesAge
+        );
+      });
+      setFilteredJobs(filtered);
+    };
+
+    filterJobs();
+  }, [filter]);
 
   return (
-    <>
-      <Card className="mb-3">
-        <Card.Img variant="top" src={job.image} alt={job.title} />
-        <Card.Body>
-          <Card.Title>{job.title}</Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">
-            {job.location}, {job.province}
-          </Card.Subtitle>
-          <Card.Text>{job.description}</Card.Text>
-          <Card.Text className="text-muted">Profesi: {job.profession}</Card.Text>
-          <Button variant="primary" onClick={handleShow}>
-            Lihat Detail
-          </Button>
-        </Card.Body>
-      </Card>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{job.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <img src={job.image} alt={job.title} className="img-fluid mb-3" />
-          <h5>Lokasi: {job.location}, {job.province}</h5>
-          <p>{job.description}</p>
-          <p className="text-muted">Profesi: {job.profession}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Tutup
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <Container className="mt-4">
+      <Row>
+        {filteredJobs.length > 0 ? (
+          filteredJobs.map((job) => (
+            <Col key={job.id} md={4}>
+              <JobCard job={job} />
+            </Col>
+          ))
+        ) : (
+          <Col>
+            <Alert variant="warning">Pekerjaan tidak ditemukan.</Alert>
+          </Col>
+        )}
+      </Row>
+    </Container>
   );
 }
 
-export default JobCard;
+export default SectionCard;
