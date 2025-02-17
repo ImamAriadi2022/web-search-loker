@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Table, Form, Button, Row, Col } from "react-bootstrap";
 import CostumNavbar from "../components/Navbar";
 
@@ -6,30 +6,51 @@ function AdminPage() {
   const [jobs, setJobs] = useState([
     {
       id: 1,
-      title: "Software Engineer",
-      location: "Jakarta",
+      name: "John Doe",
+      email: "john@example.com",
+      phone: "08123456789",
+      profession: "Programmer",
+      city: "Jakarta",
       province: "DKI Jakarta",
       description: "Mengembangkan dan memelihara aplikasi web.",
       portfolio: "https://example.com/portfolio1",
-      profession: "Programmer"
+      salary: 10000000,
+      education: "S1",
+      address: "Jl. Sudirman",
+      age: 25,
+      image: "https://example.com/profile1.jpg"
     },
     {
       id: 2,
-      title: "Graphic Designer",
-      location: "Bandung",
+      name: "Jane Smith",
+      email: "jane@example.com",
+      phone: "08123456788",
+      profession: "Digital Marketer",
+      city: "Bandung",
       province: "Jawa Barat",
       description: "Membuat konsep visual untuk mengkomunikasikan ide.",
       portfolio: "https://example.com/portfolio2",
-      profession: "Digital Marketer"
+      salary: 8000000,
+      education: "S1",
+      address: "Jl. Asia Afrika",
+      age: 28,
+      image: "https://example.com/profile2.jpg"
     },
     {
       id: 3,
-      title: "Content Creator",
-      location: "Surabaya",
+      name: "Alice Johnson",
+      email: "alice@example.com",
+      phone: "08123456787",
+      profession: "Konten Kreator",
+      city: "Surabaya",
       province: "Jawa Timur",
       description: "Menghasilkan konten yang menarik untuk berbagai platform.",
       portfolio: "https://example.com/portfolio3",
-      profession: "Konten Kreator"
+      salary: 7000000,
+      education: "SMA",
+      address: "Jl. Tunjungan",
+      age: 22,
+      image: "https://example.com/profile3.jpg"
     }
   ]);
   const [filteredJobs, setFilteredJobs] = useState(jobs);
@@ -75,7 +96,7 @@ function AdminPage() {
   // Filter jobs based on search and profession
   const filterJobs = (search, profession) => {
     const filtered = jobs.filter((job) => {
-      const matchesSearch = job.title
+      const matchesSearch = job.name
         .toLowerCase()
         .includes(search.toLowerCase());
       const matchesProfession = profession
@@ -101,7 +122,7 @@ function AdminPage() {
           <Col md={6}>
             <Form.Control
               type="text"
-              placeholder="Cari berdasarkan judul..."
+              placeholder="Cari berdasarkan nama..."
               value={searchQuery}
               onChange={handleSearch}
             />
@@ -126,19 +147,30 @@ function AdminPage() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Judul</th>
-              <th>Lokasi</th>
+              <th>Nama</th>
+              <th>Email</th>
+              <th>Telepon</th>
+              <th>Profesi</th>
+              <th>Kota</th>
               <th>Provinsi</th>
               <th>Deskripsi</th>
               <th>Portofolio</th>
+              <th>Gaji</th>
+              <th>Pendidikan</th>
+              <th>Alamat</th>
+              <th>Usia</th>
+              <th>Foto</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {filteredJobs.map((job) => (
               <tr key={job.id}>
-                <td>{job.title}</td>
-                <td>{job.location}</td>
+                <td>{job.name}</td>
+                <td>{job.email}</td>
+                <td>{job.phone}</td>
+                <td>{job.profession}</td>
+                <td>{job.city}</td>
                 <td>{job.province}</td>
                 <td>{job.description}</td>
                 <td>
@@ -149,6 +181,13 @@ function AdminPage() {
                   >
                     Lihat Portofolio
                   </a>
+                </td>
+                <td>Rp {job.salary.toLocaleString()}</td>
+                <td>{job.education}</td>
+                <td>{job.address}</td>
+                <td>{job.age}</td>
+                <td>
+                  <img src={job.image} alt="Profile" width="50" height="50" />
                 </td>
                 <td>
                   <Button
