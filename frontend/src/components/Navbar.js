@@ -5,7 +5,7 @@ function CustomNavbar() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   const handleLogout = () => {
-    localStorage.removeItem("isAdmin");
+    localStorage.clear();
     window.location.href = "/login";
   };
 
