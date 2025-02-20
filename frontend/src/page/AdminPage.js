@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Container, Table, Form, Button, Row, Col } from "react-bootstrap";
-import CostumNavbar from "../components/Navbar";
+import { Container, Table, Form, Button, Row, Col, Modal } from "react-bootstrap";
+import CustomNavbar from "../components/Navbar";
 
 function AdminPage() {
   const [jobs, setJobs] = useState([
@@ -56,6 +56,7 @@ function AdminPage() {
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProfession, setFilterProfession] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null);
 
   // Handle approve action
   const handleApprove = (id) => {
@@ -107,121 +108,140 @@ function AdminPage() {
     setFilteredJobs(filtered);
   };
 
+  // Handle show detail
+  const handleShowDetail = (job) => {
+    setSelectedJob(job);
+  };
+
+  // Handle close detail
+  const handleCloseDetail = () => {
+    setSelectedJob(null);
+  };
+
   return (
     <>
-    <CostumNavbar />
-    <Container className="mt-4">
-      <h1 className="text-center mb-4">Panel Admin</h1>
+      <CustomNavbar />
+      <Container className="mt-4">
+        <h1 className="text-center mb-4">Panel Admin</h1>
 
-      {/* Total Jobs */}
-      <h2 className="mb-4">Total Pekerjaan: {filteredJobs.length}</h2>
+        {/* Total Jobs */}
+        <h2 className="mb-4">Total Pekerjaan: {filteredJobs.length}</h2>
 
-      {/* Search and Filter Section */}
-      <Form className="mb-4">
-        <Row>
-          <Col md={6}>
-            <Form.Control
-              type="text"
-              placeholder="Cari berdasarkan nama..."
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-          </Col>
-          <Col md={6}>
-            <Form.Control
-              as="select"
-              value={filterProfession}
-              onChange={handleFilterProfession}
-            >
-              <option value="">Semua Profesi</option>
-              <option value="Programmer">Programmer</option>
-              <option value="Digital Marketer">Digital Marketer</option>
-              <option value="Konten Kreator">Konten Kreator</option>
-            </Form.Control>
-          </Col>
-        </Row>
-      </Form>
+        {/* Search and Filter Section */}
+        <Form className="mb-4">
+          <Row>
+            <Col md={6}>
+              <Form.Control
+                type="text"
+                placeholder="Cari berdasarkan nama..."
+                value={searchQuery}
+                onChange={handleSearch}
+              />
+            </Col>
+            <Col md={6}>
+              <Form.Control
+                as="select"
+                value={filterProfession}
+                onChange={handleFilterProfession}
+              >
+                <option value="">Semua Profesi</option>
+                <option value="Programmer">Programmer</option>
+                <option value="Digital Marketer">Digital Marketer</option>
+                <option value="Konten Kreator">Konten Kreator</option>
+              </Form.Control>
+            </Col>
+          </Row>
+        </Form>
 
-      {/* Jobs Table */}
-      {filteredJobs.length > 0 ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Email</th>
-              <th>Telepon</th>
-              <th>Profesi</th>
-              <th>Kota</th>
-              <th>Provinsi</th>
-              <th>Deskripsi</th>
-              <th>Portofolio</th>
-              <th>Gaji</th>
-              <th>Pendidikan</th>
-              <th>Alamat</th>
-              <th>Usia</th>
-              <th>Foto</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredJobs.map((job) => (
-              <tr key={job.id}>
-                <td>{job.name}</td>
-                <td>{job.email}</td>
-                <td>{job.phone}</td>
-                <td>{job.profession}</td>
-                <td>{job.city}</td>
-                <td>{job.province}</td>
-                <td>{job.description}</td>
-                <td>
-                  <a
-                    href={job.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Lihat Portofolio
-                  </a>
-                </td>
-                <td>Rp {job.salary.toLocaleString()}</td>
-                <td>{job.education}</td>
-                <td>{job.address}</td>
-                <td>{job.age}</td>
-                <td>
-                  <img src={job.image} alt="Profile" width="50" height="50" />
-                </td>
-                <td>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    onClick={() => handleApprove(job.id)}
-                    className="mr-2"
-                  >
-                    Setujui
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleReject(job.id)}
-                    className="mr-2"
-                  >
-                    Tolak
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleDelete(job.id)}
-                  >
-                    Hapus
-                  </Button>
-                </td>
+        {/* Jobs Table */}
+        {filteredJobs.length > 0 ? (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Profesi</th>
+                <th>Kota</th>
+                <th>Provinsi</th>
+                <th>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <p>Tidak ada pekerjaan ditemukan.</p>
-      )}
-    </Container>
+            </thead>
+            <tbody>
+              {filteredJobs.map((job) => (
+                <tr key={job.id}>
+                  <td>{job.name}</td>
+                  <td>{job.profession}</td>
+                  <td>{job.city}</td>
+                  <td>{job.province}</td>
+                  <td>
+                    <Button
+                      variant="info"
+                      size="sm"
+                      onClick={() => handleShowDetail(job)}
+                      className="mr-2"
+                    >
+                      Lihat Detail
+                    </Button>
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => handleApprove(job.id)}
+                      className="mr-2"
+                    >
+                      Setujui
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleReject(job.id)}
+                      className="mr-2"
+                    >
+                      Tolak
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleDelete(job.id)}
+                    >
+                      Hapus
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <p>Tidak ada pekerjaan ditemukan.</p>
+        )}
+
+        {/* Job Detail Modal */}
+        {selectedJob && (
+          <Modal show={true} onHide={handleCloseDetail}>
+            <Modal.Header closeButton>
+              <Modal.Title>Detail Pekerjaan</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p><strong>Nama:</strong> {selectedJob.name}</p>
+              <p><strong>Email:</strong> {selectedJob.email}</p>
+              <p><strong>Telepon:</strong> {selectedJob.phone}</p>
+              <p><strong>Profesi:</strong> {selectedJob.profession}</p>
+              <p><strong>Kota:</strong> {selectedJob.city}</p>
+              <p><strong>Provinsi:</strong> {selectedJob.province}</p>
+              <p><strong>Deskripsi:</strong> {selectedJob.description}</p>
+              <p><strong>Portofolio:</strong> <a href={selectedJob.portfolio} target="_blank" rel="noopener noreferrer">Lihat Portofolio</a></p>
+              <p><strong>Gaji:</strong> Rp {selectedJob.salary.toLocaleString()}</p>
+              <p><strong>Pendidikan:</strong> {selectedJob.education}</p>
+              <p><strong>Alamat:</strong> {selectedJob.address}</p>
+              <p><strong>Usia:</strong> {selectedJob.age}</p>
+              <p><strong>Foto:</strong> <img src={selectedJob.image} alt="Profile" width="100" height="100" /></p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseDetail}>
+                Tutup
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+      </Container>
     </>
   );
 }
