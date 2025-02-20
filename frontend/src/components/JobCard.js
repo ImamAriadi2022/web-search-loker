@@ -1,11 +1,25 @@
 import React, { useState } from "react";
 import { Card, Button, Modal, Image, Carousel } from "react-bootstrap";
+import LoginModal from "./LoginModal";
 
 function JobCard({ job, onSelectJob }) {
   const [show, setShow] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    if (isLoggedIn) {
+      onSelectJob(job);
+      setShow(true);
+    } else {
+      setShowLogin(true);
+    }
+  };
+
+  const handleLogin = () => {
+    localStorage.setItem("isLoggedIn", "true");
+    setShowLogin(false);
     onSelectJob(job);
     setShow(true);
   };
@@ -61,6 +75,8 @@ function JobCard({ job, onSelectJob }) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <LoginModal show={showLogin} handleClose={() => setShowLogin(false)} handleLogin={handleLogin} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Table, Form, Button, Row, Col, Modal } from "react-bootstrap";
 import CustomNavbar from "../components/Navbar";
+import AdminCart from "../components/AdminCart";
 
 function AdminPage() {
   const [jobs, setJobs] = useState([
@@ -242,6 +243,7 @@ function AdminPage() {
           </Modal>
         )}
       </Container>
+      <AdminCart />
     </>
   );
 }

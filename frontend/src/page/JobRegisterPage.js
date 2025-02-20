@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import axios from "axios";
-import CostumNavbar from "../components/Navbar";
-
+import CustomNavbar from "../components/Navbar";
 
 function JobRegisterPage() {
   const [name, setName] = useState("");
@@ -17,7 +16,8 @@ function JobRegisterPage() {
   const [education, setEducation] = useState("");
   const [address, setAddress] = useState("");
   const [age, setAge] = useState("");
-  const [image, setImage] = useState(null);
+  const [certificate, setCertificate] = useState(null);
+  const [skills, setSkills] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [manualInput, setManualInput] = useState(false);
@@ -49,6 +49,22 @@ function JobRegisterPage() {
       });
   };
 
+  const handleProfessionChange = (e) => {
+    const selectedProfession = e.target.value;
+    setProfession(selectedProfession);
+
+    // Set skills based on selected profession
+    let professionSkills = [];
+    if (selectedProfession === "Programmer") {
+      professionSkills = ["Menguasai HTML", "Menguasai CSS", "Menguasai JavaScript", "Menguasai PHP"];
+    } else if (selectedProfession === "Digital Marketer") {
+      professionSkills = ["Menguasai SEO", "Menguasai SEM", "Menguasai Google Analytics", "Menguasai Content Marketing"];
+    } else if (selectedProfession === "Konten Kreator") {
+      professionSkills = ["Menguasai Video Editing", "Menguasai Graphic Design", "Menguasai Photography", "Menguasai Social Media Management"];
+    }
+    setSkills(professionSkills);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -64,8 +80,8 @@ function JobRegisterPage() {
     formData.append("education", education);
     formData.append("address", address);
     formData.append("age", age);
-    if (image) {
-      formData.append("image", image);
+    if (certificate) {
+      formData.append("certificate", certificate);
     }
 
     try {
@@ -86,148 +102,161 @@ function JobRegisterPage() {
 
   return (
     <>
-    <CostumNavbar />
-    <Container className="mt-4">
-      <h1 className="text-center mb-4">Daftarkan Pekerjaan</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formName">
-          <Form.Label>Nama</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Masukkan nama"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Masukkan email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formPhone">
-          <Form.Label>Nomor Telepon/WA</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Masukkan nomor telepon atau WA"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formProfession">
-          <Form.Label>Profesi</Form.Label>
-          <Form.Control
-            as="select"
-            value={profession}
-            onChange={(e) => setProfession(e.target.value)}
-          >
-            <option value="">Pilih Profesi</option>
-            <option value="Programmer">Programmer</option>
-            <option value="Digital Marketer">Digital Marketer</option>
-            <option value="Konten Kreator">Konten Kreator</option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="formProvince">
-          <Form.Label>Provinsi</Form.Label>
-          <Form.Control
-            as="select"
-            value={province}
-            onChange={handleProvinceChange}
-          >
-            <option value="">Pilih Provinsi</option>
-            {provinces.map((province) => (
-              <option key={province.id} value={province.id}>
-                {province.text}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="formCity">
-          <Form.Label>Kota/Kabupaten</Form.Label>
-          <Form.Control
-            as="select"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            disabled={!province}
-          >
-            <option value="">Pilih Kota/Kabupaten</option>
-            {cities.map((city) => (
-              <option key={city.id} value={city.id}>
-                {city.text}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="formSalary">
-          <Form.Label>Gaji</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Masukkan gaji"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formEducation">
-          <Form.Label>Pendidikan</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Masukkan pendidikan"
-            value={education}
-            onChange={(e) => setEducation(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formAddress">
-          <Form.Label>Alamat</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Masukkan alamat"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formAge">
-          <Form.Label>Usia</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Masukkan usia"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formDescription">
-          <Form.Label>Deskripsi</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            placeholder="Masukkan deskripsi pekerjaan"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formPortfolio">
-          <Form.Label>Link Portofolio</Form.Label>
-          <Form.Control
-            type="url"
-            placeholder="Masukkan link portofolio"
-            value={portfolio}
-            onChange={(e) => setPortfolio(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formImage">
-          <Form.Label>Unggah Foto</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Daftar
-        </Button>
-      </Form>
-    </Container>
+      <CustomNavbar />
+      <Container className="mt-4">
+        <h1 className="text-center mb-4">Daftarkan Pekerjaan</h1>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="formName">
+            <Form.Label>Nama</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Masukkan nama"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formEmail">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Masukkan email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formPhone">
+            <Form.Label>Nomor Telepon atau WhatsApp</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Masukkan nomor telepon atau WhatsApp"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formProfession">
+            <Form.Label>Profesi</Form.Label>
+            <Form.Control
+              as="select"
+              value={profession}
+              onChange={handleProfessionChange}
+            >
+              <option value="">Pilih Profesi</option>
+              <option value="Programmer">Programmer</option>
+              <option value="Digital Marketer">Digital Marketer</option>
+              <option value="Konten Kreator">Konten Kreator</option>
+            </Form.Control>
+          </Form.Group>
+          {skills.length > 0 && (
+            <Form.Group controlId="formSkills">
+              <Form.Label>Keahlian</Form.Label>
+              {skills.map((skill, index) => (
+                <Form.Check
+                  key={index}
+                  type="checkbox"
+                  label={skill}
+                  value={skill}
+                />
+              ))}
+            </Form.Group>
+          )}
+          <Form.Group controlId="formProvince">
+            <Form.Label>Provinsi</Form.Label>
+            <Form.Control
+              as="select"
+              value={province}
+              onChange={handleProvinceChange}
+            >
+              <option value="">Pilih Provinsi</option>
+              {provinces.map((province) => (
+                <option key={province.id} value={province.id}>
+                  {province.text}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="formCity">
+            <Form.Label>Kota/Kabupaten</Form.Label>
+            <Form.Control
+              as="select"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              disabled={!province}
+            >
+              <option value="">Pilih Kota/Kabupaten</option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {city.text}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="formSalary">
+            <Form.Label>Gaji</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Masukkan gaji"
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formEducation">
+            <Form.Label>Pendidikan</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Masukkan pendidikan"
+              value={education}
+              onChange={(e) => setEducation(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formAddress">
+            <Form.Label>Alamat</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Masukkan alamat"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formAge">
+            <Form.Label>Usia</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Masukkan usia"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formDescription">
+            <Form.Label>Deskripsi</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Masukkan deskripsi pekerjaan"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formPortfolio">
+            <Form.Label>Link Portofolio</Form.Label>
+            <Form.Control
+              type="url"
+              placeholder="Masukkan link portofolio"
+              value={portfolio}
+              onChange={(e) => setPortfolio(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formCertificate">
+            <Form.Label>Unggah Sertifikat</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) => setCertificate(e.target.files[0])}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Daftar
+          </Button>
+        </Form>
+      </Container>
     </>
   );
 }
